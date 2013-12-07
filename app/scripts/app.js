@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('myTodolistWebfrontApp', [
+var app = angular.module('myTodolistWebfrontApp', [
+  'ngRoute',
   'ngCookies',
   'ngResource',
   'ngSanitize'
