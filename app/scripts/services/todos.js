@@ -1,6 +1,11 @@
 'use strict';
 
-app.factory('Todos', function($resource) {
-  // return $resource('http://localhost:3000/todos/:id')
-  return $resource('http://todolist-api.herokuapp.com/todos/:id')
+app.factory('Todos', function($resource, ENV) {
+  var backend;
+  if (ENV === 'production') {
+    backend = 'http://todolist-api.herokuapp.com'
+  } else {
+    backend = 'http://localhost:3000'
+  }
+  return $resource(backend + '/todos/:id')
 });
