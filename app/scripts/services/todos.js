@@ -1,15 +1,6 @@
 'use strict';
 
-app.factory('Todos', function() {
-  return {
-    query: function() {
-      return [
-        {
-          title: "Do something on the webfront",
-          completed: false,
-          priority: 1
-        }
-      ];
-    }
-  };
+app.factory('Todos', function($resource) {
+  // return $resource('http://localhost:3000/todos/:id')
+  return $resource('http://todolist-api.herokuapp.com/todos/:id')
 });
