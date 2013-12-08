@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('MainCtrl', function ($scope, Todos) {
+app.controller('MainCtrl', function ($scope, Todos, $timeout) {
   $scope.newTodo = {
     title: "",
     completed: false,
@@ -10,7 +10,7 @@ app.controller('MainCtrl', function ($scope, Todos) {
   $scope.todos = Todos.query();
 
   $scope.createTodo = function () {
-    Todos.save({todo: $scope.newTodo}, function (todo) {
+    Todos.save($scope.newTodo, function (todo) {
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
     });
@@ -20,6 +20,12 @@ app.controller('MainCtrl', function ($scope, Todos) {
     Todos.delete({id: todo.id}, function () {
       $scope.todos.splice($scope.todos.indexOf(todo), 1);
     });
+  };
+
+  $scope.toggleCompleted = function (todo) {
+    $timeout(function () {
+      todo.$patch();
+    }, 0);
   };
 
 });

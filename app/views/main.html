@@ -8,7 +8,7 @@
   </form>
   <br/>
   <form class="form-inline" ng-repeat="todo in todos" todo-hover>
-    <div class="checkbox">
+    <div class="checkbox" ng-click="toggleCompleted(todo)">
       <label ng-class="{'todo-completed': todo.completed}">
         <input type="checkbox" ng-model="todo.completed">
         {{todo.title}}

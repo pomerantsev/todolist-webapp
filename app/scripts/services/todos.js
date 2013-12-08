@@ -7,5 +7,7 @@ app.factory('Todos', function($resource, ENV) {
   } else if (ENV === 'development') {
     backend = 'http://localhost:3000'
   }
-  return $resource(backend + '/todos/:id')
+  return $resource(backend + '/todos/:id', {}, {
+    patch: {method: 'PATCH', params: {id: "@id"}}
+  });
 });
