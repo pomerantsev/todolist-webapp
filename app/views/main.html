@@ -1,10 +1,19 @@
-<div class="jumbotron">
-  <h1>Todos:</h1>
-  <ul>
-      <li ng-repeat="todo in todos">{{todo.title}}</li>
-  </ul>
-  <form ng-submit="create(title)">
-    <input type="text" ng-model="title">
-    <button type="submit">Submit</button>
+<div class="container">
+  <p>What would you like to do?</p>
+  <form class="form-inline">
+    <div class="form-group">
+      <input type="text" class="form-control" ng-model="newTodo.title">
+    </div>
+    <button class="btn btn-default" ng-click="createTodo()">Create</button>
+  </form>
+  <br/>
+  <form class="form-inline" ng-repeat="todo in todos" todo-hover>
+    <div class="checkbox">
+      <label ng-class="{'todo-completed': todo.completed}">
+        <input type="checkbox" ng-model="todo.completed">
+        {{todo.title}}
+      </label>
+    </div>
+    <a href ng-click="deleteTodo(todo)" todo-show-on-hover>Delete</a>
   </form>
 </div>

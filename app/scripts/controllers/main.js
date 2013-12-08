@@ -1,16 +1,19 @@
 'use strict';
 
-angular.module('myTodolistWebfrontApp')
-  .controller('MainCtrl', function ($scope, Todos) {
-    $scope.todos = Todos.query();
+app.controller('MainCtrl', function ($scope, Todos) {
+  $scope.newTodo = {
+    title: "",
+    completed: false,
+    priority: 2
+  };
 
-    $scope.create = function(title) {
-      Todos.save(
-        {todo:
-          {title: title, completed: false, priority: 2}
-        }, function(todo) {
-          $scope.todos.push(todo);
-          $scope.title = "";
-        });
-    }
-  });
+  $scope.todos = Todos.query();
+
+  $scope.createTodo = function () {
+    Todos.save({todo: $scope.newTodo}, function(todo) {
+      $scope.todos.push(todo);
+      $scope.newTodo.title = "";
+    });
+  };
+
+});
