@@ -3,4 +3,8 @@
   <ul>
       <li ng-repeat="todo in todos">{{todo.title}}</li>
   </ul>
+  <form ng-submit="create(title)">
+    <input type="text" ng-model="title">
+    <button type="submit">Submit</button>
+  </form>
 </div>
