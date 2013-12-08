@@ -10,9 +10,15 @@ app.controller('MainCtrl', function ($scope, Todos) {
   $scope.todos = Todos.query();
 
   $scope.createTodo = function () {
-    Todos.save({todo: $scope.newTodo}, function(todo) {
+    Todos.save({todo: $scope.newTodo}, function (todo) {
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
+    });
+  };
+
+  $scope.deleteTodo = function (todo) {
+    Todos.delete({id: todo.id}, function () {
+      $scope.todos.splice($scope.todos.indexOf(todo), 1);
     });
   };
 
