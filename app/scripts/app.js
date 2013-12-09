@@ -14,7 +14,12 @@ var app = angular.module('myTodolistWebfrontApp', [
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+        resolve: {
+          token: function (tokenHandler) {
+            return tokenHandler.get();
+          }
+        }
       })
       .when('/login', {
         templateUrl: 'views/login.html',
