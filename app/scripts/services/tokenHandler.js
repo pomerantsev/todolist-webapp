@@ -1,8 +1,8 @@
 'use strict';
 
-app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
-  var token = null,
-      currentUser;
+app.factory('tokenHandler', function($rootScope, $http, $q, $location, $cookies) {
+  var token = $cookies.token,
+      email = $cookies.email;
 
   // https://gist.github.com/nblumoe/3052052
   var tokenWrapper = function (resource, action) {
@@ -11,7 +11,7 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
       return resource['_' + action](
         angular.extend({}, data || {}, {
           user_token: tokenHandler.get().token,
-          user_email: tokenHandler.get().currentUser.email
+          user_email: tokenHandler.get().email
         }),
         success,
         error
@@ -20,9 +20,9 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
   };
 
   var tokenHandler = {
-    set: function (newToken, newUser) {
-      token = newToken;
-      currentUser = newUser;
+    set: function (newToken, newEmail) {
+      token = $cookies.token = newToken;
+      email = $cookies.email = newEmail;
     },
     get: function () {
       if (!token) {
@@ -30,7 +30,7 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
       } else {
         return {
           token: token,
-          currentUser: currentUser
+          email: email
         };
       }
     },
