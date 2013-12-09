@@ -16,9 +16,9 @@ var app = angular.module('myTodolistWebfrontApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         resolve: {
-          token: function (tokenHandler) {
+          token: ['tokenHandler', function (tokenHandler) {
             return tokenHandler.get();
-          }
+          }]
         }
       })
       .when('/login', {
