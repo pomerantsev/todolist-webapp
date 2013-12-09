@@ -12,7 +12,7 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
     }).success(function (data) {
       if (data.success) {
         $rootScope.$broadcast('event:authenticated');
-        tokenHandler.set(data.auth_token);
+        tokenHandler.set(data.auth_token, data.user);
         $location.path('/');
       } else {
         $scope.user.errors = data.info;
@@ -31,7 +31,7 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
       }
     }).success(function (data) {
       $rootScope.$broadcast('event:authenticated');
-      tokenHandler.set(data.auth_token);
+      tokenHandler.set(data.auth_token, data.user);
       $location.path('/');
     }).error(function (reason) {
       $scope.user.errors = reason;
