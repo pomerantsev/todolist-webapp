@@ -13,8 +13,10 @@
            ng-model="user.password">
   </div>
   <button type="submit" class="btn btn-primary">Log in</button>
-  <button ng-click="signup()" class="btn btn-default">Sign up</button>
 </form>
+
+<button ng-click="signup()" class="btn btn-default">Sign up</button>
+
 <div ng-show="user.errors">
   <h2>{{user.errors}}</h2>
 </div>
