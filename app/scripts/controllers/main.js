@@ -22,6 +22,8 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout) {
     });
   };
 
+  // TODO: only triggered by click, but should react to any toggling,
+  // e.g. by pressing the Space key.
   $scope.toggleCompleted = function (todo) {
     $timeout(function () {
       todo.$patch();
