@@ -4,9 +4,24 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
   var token = null,
       currentUser;
 
+  // https://gist.github.com/nblumoe/3052052
+  var tokenWrapper = function (resource, action) {
+    resource['_' + action] = resource[action];
+    resource[action] = function (data, success, error) {
+      return resource['_' + action](
+        angular.extend({}, data || {}, {
+          user_token: tokenHandler.get().token,
+          user_email: tokenHandler.get().currentUser.email
+        }),
+        success,
+        error
+      );
+    };
+  };
+
   var tokenHandler = {
     set: function (newToken, newUser) {
-      token = value;
+      token = newToken;
       currentUser = newUser;
     },
     get: function () {
@@ -18,6 +33,13 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location) {
           currentUser: currentUser
         };
       }
+    },
+    wrapActions: function (resource, actions) {
+      var wrappedResource = resource;
+      for (var i = 0; i < actions.length; i++) {
+        tokenWrapper(wrappedResource, actions[i]);
+      }
+      return wrappedResource;
     }
   };
 
