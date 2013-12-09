@@ -23,4 +23,30 @@ var app = angular.module('myTodolistWebfrontApp', [
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .config(function ($httpProvider) {
+    var interceptor = ['$rootScope', '$location', '$q',
+      function ($rootScope, $location, $q) {
+        var success = function (resp) {
+          return resp;
+        };
+        var err = function (resp) {
+          if (resp.status == 401) {
+            var d = $q.defer();
+            $rootScope.$broadcast('event:unauthorized');
+            return d.promise;
+          }
+          return $q.reject(resp);
+        };
+
+        return function (promise) {
+          return promise.then(success, err);
+        };
+      }];
+    $httpProvider.responseInterceptors.push(interceptor);
+  })
+  .run(function ($rootScope, $http, $location, tokenHandler) {
+    $rootScope.$on('event:unauthorized', function () {
+      $location.path('/login');
+    })
   });
