@@ -3,7 +3,8 @@
 }
 
 .table-col-title {
-  width: 55%;
+  width: 50%;
+  vertical-align: middle !important;
 }
 
 .table-col-created,
@@ -11,9 +12,20 @@
 .table-col-priority {
   width: 10%;
   text-align: center;
+  vertical-align: middle !important;
 }
 
 .table-col-actions {
-  width: 15%;
+  width: 20%;
   text-align: center;
+  vertical-align: middle !important;
+}
+
+.action {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+tr {
+  height: 51px;
 }

@@ -53,10 +53,10 @@
           <input type="number" class="form-control" min="1" max="3" ng-model="editedTodo.priority" ng-show="todo.editing">
         </td>
         <td class="table-col-actions">
-          <a href ng-click="editTodo(todo)" ng-show="hover && !todo.editing">Edit</a>
-          <a href ng-click="deleteTodo(todo)" ng-show="hover && !todo.editing">Delete</a>
-          <a href ng-click="saveEditing(todo)" ng-show="todo.editing">Save</a>
-          <a href ng-click="cancelEditing(todo)" ng-show="todo.editing">Cancel</a>
+          <a class="action btn btn-default" ng-click="editTodo(todo)" ng-show="hover && !todo.editing">Edit</a>
+          <a class="action btn btn-default" ng-click="deleteTodo(todo)" ng-show="hover && !todo.editing">Delete</a>
+          <a class="action btn btn-default" ng-click="saveEditing(todo)" ng-show="todo.editing">Save</a>
+          <a class="action btn btn-default" ng-click="cancelEditing(todo)" ng-show="todo.editing">Cancel</a>
         </td>
       </tr>
     </tbody>
