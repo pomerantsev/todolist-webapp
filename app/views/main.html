@@ -17,4 +17,42 @@
     </div>
     <a href ng-click="deleteTodo(todo)" todo-show-on-hover>Delete</a>
   </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Created</th>
+        <th>Due Date</th>
+        <th>Priority</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="todo in todos">
+        <td>
+          <form class="form-inline">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="todo.completed">
+                {{todo.title}}
+              </label>
+            </div>
+          </form>
+        </td>
+        <td>
+          {{todo.created_at}}
+        </td>
+        <td>
+          {{todo.due_date}}
+        </td>
+        <td>
+          {{todo.priority}}
+        </td>
+        <td>
+          <a href ng-click="deleteTodo(todo)">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
