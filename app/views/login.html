@@ -10,16 +10,18 @@
       <input type="email"
              class="form-control"
              placeholder="Your email"
-             ng-model="user.email">
+             ng-model="user.email"
+             ng-disabled="submitting">
     </div>
     <div class="form-group">
       <input type="password"
              class="form-control"
              placeholder="Your password"
-             ng-model="user.password">
+             ng-model="user.password"
+             ng-disabled="submitting">
     </div>
-    <button type="submit" class="btn btn-primary">Log in</button>
-    <a class="btn btn-default" ng-click="signup()">Sign up</a>
+    <button type="submit" class="btn btn-primary" ng-disabled="submitting">Log in</button>
+    <a class="btn btn-default" ng-click="signup()" ng-disabled="submitting">Sign up</a>
   </form>
   <br/>
   <errors value="{{user.errors}}"></errors>
