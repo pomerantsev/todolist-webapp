@@ -4,7 +4,6 @@ var app = angular.module('myTodolistWebfrontApp', [
   'ngRoute',
   'ngCookies',
   'ngResource',
-  'ngSanitize',
   // Add a config module for using different backends
   // for development and production:
   // http://stackoverflow.com/questions/16339595/angular-js-configuration-for-different-enviroments
