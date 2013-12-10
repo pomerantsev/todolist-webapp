@@ -35,10 +35,10 @@
           </form>
         </td>
         <td>
-          {{todo.created_at}}
+          {{todo.created_at | date:'dd MMM yyyy'}}
         </td>
         <td>
-          {{todo.due_date}}
+          {{todo.due_date | date:'dd MMM yyyy'}}
         </td>
         <td>
           {{todo.priority}}
