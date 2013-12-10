@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('MainCtrl', function ($scope, Todos, $timeout) {
+app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $rootScope) {
   $scope.newTodo = {
     title: "",
     completed: false,
@@ -47,5 +47,12 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout) {
     Todos.delete({id: todo.id}, function () {
       $scope.todos.splice($scope.todos.indexOf(todo), 1);
     });
+  };
+
+  $scope.email = tokenHandler.get().email;
+
+  $scope.logout = function () {
+    tokenHandler.set(null, null);
+    $rootScope.$broadcast('event:unauthorized');
   };
 });
