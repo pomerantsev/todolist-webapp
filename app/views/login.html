@@ -21,9 +21,6 @@
     <button type="submit" class="btn btn-primary">Log in</button>
     <a class="btn btn-default" ng-click="signup()">Sign up</a>
   </form>
-
-  <div ng-show="user.errors">
-    <h2>{{user.errors}}</h2>
-  </div>
-
+  <br/>
+  <errors value="{{user.errors}}"></errors>
 </div>

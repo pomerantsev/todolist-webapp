@@ -17,8 +17,6 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
       } else {
         $scope.user.errors = data.info;
       }
-    }).error(function (reason) {
-      $scope.user.errors = "Something is wrong with the service. Please try again.";
     });
   };
 
