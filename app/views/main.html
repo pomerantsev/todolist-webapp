@@ -12,17 +12,17 @@
   <table class="table" ng-hide="todos.length == 0">
     <thead>
       <tr>
-        <th>Todo</th>
-        <th>
+        <th class="table-col-title">Todo</th>
+        <th class="table-col-created">
           <a href ng-click="setOrder('created_at')">Created</a>
         </th>
-        <th>
+        <th class="table-col-due-date">
           <a href ng-click="setOrder('due_date')">Due Date</a>
         </th>
-        <th>
+        <th class="table-col-priority">
           <a href ng-click="setOrder('priority')">Priority</a>
         </th>
-        <th>Actions</th>
+        <th class="table-col-actions">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
           ng-mouseenter="hover=true"
           ng-mouseleave="hover=false"
           ng-class="{'text-muted': todo.completed, success: todo.completed}">
-        <td>
+        <td class="table-col-title">
           <form class="form-inline">
             <div class="checkbox" ng-show="!todo.editing">
               <label>
@@ -41,18 +41,18 @@
             <input type="text" class="form-control" ng-model="editedTodo.title" ng-show="todo.editing">
           </form>
         </td>
-        <td>
+        <td class="table-col-created">
           {{todo.created_at | date:'dd MMM yyyy'}}
         </td>
-        <td>
+        <td class="table-col-due-date">
           <span ng-show="!todo.editing">{{todo.due_date | date:'dd MMM yyyy'}}</span>
           <input type="date" class="form-control" ng-model="editedTodo.due_date" ng-show="todo.editing">
         </td>
-        <td>
+        <td class="table-col-priority">
           <span ng-show="!todo.editing">{{todo.priority}}</span>
           <input type="number" class="form-control" min="1" max="3" ng-model="editedTodo.priority" ng-show="todo.editing">
         </td>
-        <td>
+        <td class="table-col-actions">
           <a href ng-click="editTodo(todo)" ng-show="hover && !todo.editing">Edit</a>
           <a href ng-click="deleteTodo(todo)" ng-show="hover && !todo.editing">Delete</a>
           <a href ng-click="saveEditing(todo)" ng-show="todo.editing">Save</a>

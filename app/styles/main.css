@@ -1,3 +1,17 @@
 .signup {
   margin-top: 15px;
 }
+
+.table-col-title {
+  width: 55%;
+}
+
+.table-col-created,
+.table-col-due-date,
+.table-col-priority {
+  width: 10%;
+}
+
+.table-col-actions {
+  width: 15%;
+}
