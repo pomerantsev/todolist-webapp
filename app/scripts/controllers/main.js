@@ -7,6 +7,8 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
     priority: 2
   };
 
+  $scope.submittingNew = false;
+
   $scope.todos = Todos.query();
 
   $scope.predicate = 'created_at';
@@ -16,11 +18,20 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.createTodo = function () {
+    $scope.submittingNew = true;
     Todos.save($scope.newTodo, function (todo) {
+      $scope.submittingNew = false;
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
+    }, function (response) {
+      $scope.submittingNew = false;
+      $scope.errors = response.data;
     });
   };
+
+  $scope.$watch('newTodo', function () {
+    $scope.errors = null;
+  }, true);
 
   $scope.saveTodo = function (todo) {
     todo.$patch();
