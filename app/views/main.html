@@ -13,14 +13,20 @@
     <thead>
       <tr>
         <th>Todo</th>
-        <th>Created</th>
-        <th>Due Date</th>
-        <th>Priority</th>
+        <th>
+          <a href ng-click="setOrder('created_at')">Created</a>
+        </th>
+        <th>
+          <a href ng-click="setOrder('due_date')">Due Date</a>
+        </th>
+        <th>
+          <a href ng-click="setOrder('priority')">Priority</a>
+        </th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="todo in todos"
+      <tr ng-repeat="todo in todos | orderBy:[predicate, 'id']"
           ng-mouseenter="hover=true"
           ng-mouseleave="hover=false"
           ng-class="{'text-muted': todo.completed, success: todo.completed}">

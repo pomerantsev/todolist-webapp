@@ -9,6 +9,12 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout) {
 
   $scope.todos = Todos.query();
 
+  $scope.predicate = 'created_at';
+
+  $scope.setOrder = function (predicate) {
+    $scope.predicate = predicate;
+  };
+
   $scope.createTodo = function () {
     Todos.save($scope.newTodo, function (todo) {
       $scope.todos.push(todo);
