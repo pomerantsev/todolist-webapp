@@ -1,13 +1,10 @@
 <div class="container">
   <a logout>Logout</a>
-  <p>What would you like to do?</p>
-  <form class="form-inline">
+  <form ng-submit="createTodo()">
     <div class="form-group">
-      <input type="text" class="form-control" ng-model="newTodo.title">
+      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?">
     </div>
-    <button class="btn btn-default" ng-click="createTodo()">Create</button>
   </form>
-  <br/>
 
   <table class="table" ng-hide="todos.length == 0">
     <thead>
