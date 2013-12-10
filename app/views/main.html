@@ -20,7 +20,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="todo in todos" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+      <tr ng-repeat="todo in todos"
+          ng-mouseenter="hover=true"
+          ng-mouseleave="hover=false"
+          ng-class="{'text-muted': todo.completed, success: todo.completed}">
         <td>
           <form class="form-inline">
             <div class="checkbox">
