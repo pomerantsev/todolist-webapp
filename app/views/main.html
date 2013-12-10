@@ -9,7 +9,7 @@
   </nav>
   <form ng-submit="createTodo()">
     <div class="form-group">
-      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?" ng-disabled="submittingNew">
+      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?">
     </div>
   </form>
 
@@ -40,7 +40,7 @@
           <form class="form-inline">
             <div class="checkbox" ng-show="!todo.editing">
               <label>
-                <input type="checkbox" ng-model="todo.completed" ng-change="saveTodo(todo)">
+                <input type="checkbox" ng-model="todo.completed" ng-change="toggleCompleted(todo)">
                 {{todo.title}}
               </label>
             </div>
