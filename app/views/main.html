@@ -26,26 +26,31 @@
           ng-class="{'text-muted': todo.completed, success: todo.completed}">
         <td>
           <form class="form-inline">
-            <div class="checkbox">
+            <div class="checkbox" ng-show="!todo.editing">
               <label>
-                <input type="checkbox" ng-model="todo.completed">
+                <input type="checkbox" ng-model="todo.completed" ng-change="saveTodo(todo)">
                 {{todo.title}}
               </label>
             </div>
+            <input type="text" class="form-control" ng-model="editedTodo.title" ng-show="todo.editing">
           </form>
         </td>
         <td>
           {{todo.created_at | date:'dd MMM yyyy'}}
         </td>
         <td>
-          {{todo.due_date | date:'dd MMM yyyy'}}
+          <span ng-show="!todo.editing">{{todo.due_date | date:'dd MMM yyyy'}}</span>
+          <input type="date" class="form-control" ng-model="editedTodo.due_date" ng-show="todo.editing">
         </td>
         <td>
-          {{todo.priority}}
+          <span ng-show="!todo.editing">{{todo.priority}}</span>
+          <input type="number" class="form-control" min="1" max="3" ng-model="editedTodo.priority" ng-show="todo.editing">
         </td>
         <td>
-          <a href ng-click="editTodo(todo)" ng-show="hover">Edit</a>
-          <a href ng-click="deleteTodo(todo)" ng-show="hover">Delete</a>
+          <a href ng-click="editTodo(todo)" ng-show="hover && !todo.editing">Edit</a>
+          <a href ng-click="deleteTodo(todo)" ng-show="hover && !todo.editing">Delete</a>
+          <a href ng-click="saveEditing(todo)" ng-show="todo.editing">Save</a>
+          <a href ng-click="cancelEditing(todo)" ng-show="todo.editing">Cancel</a>
         </td>
       </tr>
     </tbody>
