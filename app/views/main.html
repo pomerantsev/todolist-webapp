@@ -8,28 +8,19 @@
     <button class="btn btn-default" ng-click="createTodo()">Create</button>
   </form>
   <br/>
-  <form class="form-inline" ng-repeat="todo in todos" todo-hover>
-    <div class="checkbox" ng-click="toggleCompleted(todo)">
-      <label ng-class="{'todo-completed': todo.completed}">
-        <input type="checkbox" ng-model="todo.completed">
-        {{todo.title}}
-      </label>
-    </div>
-    <a href ng-click="deleteTodo(todo)" todo-show-on-hover>Delete</a>
-  </form>
 
   <table class="table">
     <thead>
       <tr>
-        <th></th>
+        <th>Todo</th>
         <th>Created</th>
         <th>Due Date</th>
         <th>Priority</th>
-        <th></th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="todo in todos">
+      <tr ng-repeat="todo in todos" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
         <td>
           <form class="form-inline">
             <div class="checkbox">
@@ -50,7 +41,8 @@
           {{todo.priority}}
         </td>
         <td>
-          <a href ng-click="deleteTodo(todo)">Delete</a>
+          <a href ng-click="editTodo(todo)" ng-show="hover">Edit</a>
+          <a href ng-click="deleteTodo(todo)" ng-show="hover">Delete</a>
         </td>
       </tr>
     </tbody>
