@@ -1,20 +1,65 @@
 <div class="container">
-  <a logout="">Logout</a>
-  <p>What would you like to do?</p>
-  <form class="form-inline">
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <div class="navbar-brand">todolist</div>
+    </div>
+    <div class="collapse navbar-collapse">
+      <p class="navbar-text navbar-right">Signed in as {{email}} (<a href="" class="navbar-link" ng-click="logout()">logout</a>)</p>
+    </div>
+  </nav>
+  <form ng-submit="createTodo()">
     <div class="form-group">
-      <input type="text" class="form-control" ng-model="newTodo.title">
+      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?">
     </div>
-    <button class="btn btn-default" ng-click="createTodo()">Create</button>
   </form>
-  <br>
-  <form class="form-inline" ng-repeat="todo in todos" todo-hover="">
-    <div class="checkbox" ng-click="toggleCompleted(todo)">
-      <label ng-class="{'todo-completed': todo.completed}">
-        <input type="checkbox" ng-model="todo.completed">
-        {{todo.title}}
-      </label>
-    </div>
-    <a href="" ng-click="deleteTodo(todo)" todo-show-on-hover="">Delete</a>
-  </form>
+
+  <table class="table" ng-hide="todos.length == 0">
+    <thead>
+      <tr>
+        <th class="table-col-title">Todo</th>
+        <th class="table-col-created">
+          <a href="" ng-click="setOrder('created_at')">Created</a>
+        </th>
+        <th class="table-col-due-date">
+          <a href="" ng-click="setOrder('due_date')">Due Date</a>
+        </th>
+        <th class="table-col-priority">
+          <a href="" ng-click="setOrder('priority')">Priority</a>
+        </th>
+        <th class="table-col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="todo in todos | orderBy:[predicate, 'id']" ng-mouseenter="hover=true" ng-mouseleave="hover=false" ng-class="{'text-muted': todo.completed, success: todo.completed}">
+        <td class="table-col-title">
+          <form class="form-inline">
+            <div class="checkbox" ng-show="!todo.editing">
+              <label>
+                <input type="checkbox" ng-model="todo.completed" ng-change="saveTodo(todo)">
+                {{todo.title}}
+              </label>
+            </div>
+            <input type="text" class="form-control" ng-model="editedTodo.title" ng-show="todo.editing">
+          </form>
+        </td>
+        <td class="table-col-created">
+          {{todo.created_at | date:'dd MMM yyyy'}}
+        </td>
+        <td class="table-col-due-date">
+          <span ng-show="!todo.editing">{{todo.due_date | date:'dd MMM yyyy'}}</span>
+          <input type="date" class="form-control" ng-model="editedTodo.due_date" ng-show="todo.editing">
+        </td>
+        <td class="table-col-priority">
+          <span ng-show="!todo.editing">{{todo.priority}}</span>
+          <input type="number" class="form-control" min="1" max="3" ng-model="editedTodo.priority" ng-show="todo.editing">
+        </td>
+        <td class="table-col-actions">
+          <a class="action btn btn-default" ng-click="editTodo(todo)" ng-show="hover && !todo.editing">Edit</a>
+          <a class="action btn btn-default" ng-click="deleteTodo(todo)" ng-show="hover && !todo.editing">Delete</a>
+          <a class="action btn btn-default" ng-click="saveEditing(todo)" ng-show="todo.editing">Save</a>
+          <a class="action btn btn-default" ng-click="cancelEditing(todo)" ng-show="todo.editing">Cancel</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
