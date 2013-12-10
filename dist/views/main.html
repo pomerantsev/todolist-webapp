@@ -13,6 +13,8 @@
     </div>
   </form>
 
+  <errors value="{{errors}}"></errors>
+
   <table class="table" ng-hide="todos.length == 0">
     <thead>
       <tr>
@@ -35,7 +37,7 @@
           <form class="form-inline">
             <div class="checkbox" ng-show="!todo.editing">
               <label>
-                <input type="checkbox" ng-model="todo.completed" ng-change="saveTodo(todo)">
+                <input type="checkbox" ng-model="todo.completed" ng-change="toggleCompleted(todo)">
                 {{todo.title}}
               </label>
             </div>
