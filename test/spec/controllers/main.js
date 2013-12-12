@@ -9,13 +9,16 @@ describe('Controller: MainCtrl', function () {
     scope;
 
   var mockTokenHandler = {
-    get: function () { return { token: "random_token", email: "email@email.com"} },
+    get: function () {
+      return { token: "random_token", email: "email@email.com"}
+    },
     set: function () {}
   };
 
   var mockTodos = {
     query: function () { return [{id: 1, title: "First todo"}] },
-    save: function (params, callback) { return callback(params) }
+    save: function (params, callback) { return callback(params) },
+    delete: function (params, callback) { return callback(params) }
   };
 
   // Initialize the controller and a mock scope
@@ -49,6 +52,14 @@ describe('Controller: MainCtrl', function () {
     });
     it("sets scope.newTodo.title to an empty string", function () {
       expect(scope.newTodo.title).toEqual("");
+    });
+  });
+
+  describe('$scope.deleteTodo', function () {
+    it('deletes the todo', function () {
+      scope.todos = [{title: "First todo"}, {title: "Second todo"}];
+      scope.deleteTodo(scope.todos[0]);
+      expect(scope.todos[0].title).toEqual("Second todo");
     });
   });
 
