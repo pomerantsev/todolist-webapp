@@ -14,7 +14,8 @@ describe('Controller: MainCtrl', function () {
   };
 
   var mockTodos = {
-    query: function () { return [{id: 1}] }
+    query: function () { return [{id: 1, title: "First todo"}] },
+    save: function (params, callback) { return callback(params) }
   };
 
   // Initialize the controller and a mock scope
@@ -29,8 +30,26 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  it("should do something", function () {
-    expect(true).toBe(true);
+  it('should initialize the todos with a query to the server', function () {
+    expect(scope.todos).toEqual(mockTodos.query());
+  });
+
+  it('should use created_at as the initial sorting predicate', function () {
+    expect(scope.predicate).toEqual('created_at');
+  });
+
+  describe('$scope.createTodo', function () {
+    var newTodo;
+    beforeEach(function () {
+      newTodo = scope.newTodo = {id: 2, title: "New todo"};
+      scope.createTodo();
+    });
+    it("adds the new todo to the todos array", function () {
+      expect(scope.todos[1]).toEqual(newTodo);
+    });
+    it("sets scope.newTodo.title to an empty string", function () {
+      expect(scope.newTodo.title).toEqual("");
+    });
   });
 
 });
