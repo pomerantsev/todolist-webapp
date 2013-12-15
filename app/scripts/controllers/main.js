@@ -32,7 +32,10 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   }, true);
 
   $scope.toggleCompleted = function (todo) {
-    todo.$patch();
+    todo.submitting = true;
+    todo.$patch().finally(function () {
+      todo.submitting = false;
+    });
   };
 
   $scope.editTodo = function (todo) {
@@ -41,6 +44,7 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.saveEditing = function (todo) {
+    todo.submitting = true;
     $scope.editedTodo.$patch().then(function () {
       todo.title = $scope.editedTodo.title;
       todo.due_date = $scope.editedTodo.due_date;
@@ -48,6 +52,8 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
       todo.editing = false;
     }, function (response) {
       $scope.errors = response.data;
+    }).finally(function () {
+      todo.submitting = false;
     });
   };
 
