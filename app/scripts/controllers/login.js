@@ -6,13 +6,8 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
 
   $scope.login = function () {
     $scope.submitting = true;
-    $http({
-      url: backend + '/users/sign_in',
-      method: 'POST',
-      data: {
-        user: $scope.user
-      }
-    }).success(function (data) {
+    $http.post(backend + '/users/sign_in', { user: $scope.user })
+    .success(function (data) {
       if (data.success) {
         $rootScope.$broadcast('event:authenticated');
         tokenHandler.set(data.auth_token, data.user.email);
@@ -27,13 +22,8 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
 
   $scope.signup = function () {
     $scope.submitting = true;
-    $http({
-      url: backend + '/users',
-      method: 'POST',
-      data: {
-        user: $scope.user
-      }
-    }).success(function (data) {
+    $http.post(backend + '/users', { user: $scope.user })
+    .success(function (data) {
       $rootScope.$broadcast('event:authenticated');
       tokenHandler.set(data.auth_token, data.user.email);
       $location.path('/');
