@@ -55,6 +55,26 @@ describe('Controller: MainCtrl', function () {
     });
   });
 
+  describe('$scope.editTodo', function () {
+    var firstTodo, secondTodo;
+    beforeEach(function () {
+      scope.todos = [{title: "First"}, {title: "Second"}];
+      firstTodo = scope.todos[0];
+      secondTodo = scope.todos[1];
+    });
+    it("enables the editing mode for the selected todo", function () {
+      scope.editTodo(secondTodo);
+      expect(secondTodo.editing).toBeTruthy();
+      expect(scope.editedTodo.title).toEqual("Second");
+    });
+    it("disables the editing mode for all other todos", function () {
+      scope.editTodo(firstTodo);
+      scope.editTodo(secondTodo);
+      expect(secondTodo.editing).toBeTruthy();
+      expect(firstTodo.editing).toBeFalsy();
+    });
+  });
+
   describe('$scope.deleteTodo', function () {
     it('deletes the todo', function () {
       scope.todos = [{title: "First todo"}, {title: "Second todo"}];

@@ -39,6 +39,10 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.editTodo = function (todo) {
+    $scope.errors = null;
+    angular.forEach($scope.todos, function (todo) {
+      todo.editing = false;
+    });
     todo.editing = true;
     $scope.editedTodo = angular.copy(todo);
   };
