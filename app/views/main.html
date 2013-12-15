@@ -9,7 +9,7 @@
   </nav>
   <form ng-submit="createTodo()">
     <div class="form-group">
-      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?">
+      <input type="text" class="form-control input-lg" ng-model="newTodo.title" placeholder="What needs to be done?" ng-disabled="submittingNew">
     </div>
   </form>
 

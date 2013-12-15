@@ -16,11 +16,14 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.createTodo = function () {
+    $scope.submittingNew = true;
     Todos.save($scope.newTodo, function (todo) {
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
     }, function (response) {
       $scope.errors = response.data;
+    }).$promise.finally(function () {
+      $scope.submittingNew = false;
     });
   };
 
