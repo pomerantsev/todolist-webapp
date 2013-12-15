@@ -13,7 +13,6 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
         user: $scope.user
       }
     }).success(function (data) {
-      $scope.submitting = false;
       if (data.success) {
         $rootScope.$broadcast('event:authenticated');
         tokenHandler.set(data.auth_token, data.user.email);
@@ -21,6 +20,8 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
       } else {
         $scope.user.errors = data.info;
       }
+    }).finally(function () {
+      $scope.submitting = false;
     });
   };
 
@@ -33,13 +34,13 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
         user: $scope.user
       }
     }).success(function (data) {
-      $scope.submitting = false;
       $rootScope.$broadcast('event:authenticated');
       tokenHandler.set(data.auth_token, data.user.email);
       $location.path('/');
     }).error(function (reason) {
-      $scope.submitting = false;
       $scope.user.errors = reason;
+    }).finally(function () {
+      $scope.submitting = false;
     });
   };
 });
