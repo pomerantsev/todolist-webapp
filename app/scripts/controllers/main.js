@@ -1,8 +1,9 @@
 'use strict';
 
-app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $rootScope) {
+app.controller('MainCtrl', function (
+    $scope, Todos, $timeout, tokenHandler, $rootScope, backendErrorMessage) {
   var outputBackendError = function () {
-    $scope.errors = "There seems to be a problem with the backend.";
+    $scope.errors = backendErrorMessage;
   };
 
   $scope.newTodo = {
