@@ -21,7 +21,7 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
     }, function (response) {
-      $scope.errors = response.data;
+      ($scope.errors = response.data) || outputBackendError();
     }).$promise.finally(function () {
       $scope.submittingNew = false;
     });
@@ -70,8 +70,12 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.deleteTodo = function (todo) {
+    todo.submitting = true;
     Todos.delete({id: todo.id}, function () {
       $scope.todos.splice($scope.todos.indexOf(todo), 1);
+    }, function () {
+      todo.submitting = false;
+      outputBackendError();
     });
   };
 
@@ -80,5 +84,9 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   $scope.logout = function () {
     tokenHandler.set(null, null);
     $rootScope.$broadcast('event:unauthorized');
+  };
+
+  var outputBackendError = function () {
+    $scope.errors = "There seems to be a problem with the backend.";
   };
 });
