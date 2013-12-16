@@ -1,7 +1,12 @@
 'use strict';
 
 app.controller('LoginCtrl', function($scope, $rootScope, $location,
-                                     $http, backend, tokenHandler) {
+                                     $http, backend, tokenHandler,
+                                     backendErrorMessage) {
+  var outputBackendError = function () {
+    $scope.user.errors = backendErrorMessage;
+  };
+
   $scope.submitting = false;
 
   $scope.login = function () {
@@ -15,7 +20,8 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
       } else {
         $scope.user.errors = data.info;
       }
-    }).finally(function () {
+    }).catch(outputBackendError)
+    .finally(function () {
       $scope.submitting = false;
     });
   };
@@ -28,7 +34,7 @@ app.controller('LoginCtrl', function($scope, $rootScope, $location,
       tokenHandler.set(data.auth_token, data.user.email);
       $location.path('/');
     }).error(function (reason) {
-      $scope.user.errors = reason;
+      ($scope.user.errors = reason) || outputBackendError();
     }).finally(function () {
       $scope.submitting = false;
     });
