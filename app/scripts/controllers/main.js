@@ -1,6 +1,10 @@
 'use strict';
 
 app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $rootScope) {
+  var outputBackendError = function () {
+    $scope.errors = "There seems to be a problem with the backend.";
+  };
+
   $scope.newTodo = {
     title: "",
     completed: false,
@@ -8,6 +12,11 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   };
 
   $scope.todos = Todos.query();
+  $scope.todos.$promise.catch(function () {
+    $timeout(function () {
+      outputBackendError();
+    }, 0)
+  });
 
   $scope.predicate = 'created_at';
 
@@ -89,9 +98,5 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
   $scope.logout = function () {
     tokenHandler.set(null, null);
     $rootScope.$broadcast('event:unauthorized');
-  };
-
-  var outputBackendError = function () {
-    $scope.errors = "There seems to be a problem with the backend.";
   };
 });
