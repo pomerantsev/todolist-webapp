@@ -58,7 +58,7 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
       todo.priority = $scope.editedTodo.priority;
       todo.editing = false;
     }, function (response) {
-      $scope.errors = response.data;
+      ($scope.errors = response.data) || outputBackendError();
     }).finally(function () {
       todo.submitting = false;
     });
