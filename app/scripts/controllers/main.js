@@ -36,7 +36,12 @@ app.controller('MainCtrl', function ($scope, Todos, $timeout, tokenHandler, $roo
 
   $scope.toggleCompleted = function (todo) {
     todo.submitting = true;
-    todo.$patch().finally(function () {
+    todo.$patch()
+    .catch(function () {
+      todo.completed = !todo.completed;
+      outputBackendError();
+    })
+    .finally(function () {
       todo.submitting = false;
     });
   };
