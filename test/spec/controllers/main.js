@@ -6,7 +6,8 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('myTodolistWebfrontApp'));
 
   var MainCtrl,
-    scope;
+    scope,
+    $httpBackend;
 
   var mockTokenHandler = {
     get: function () {
@@ -15,26 +16,32 @@ describe('Controller: MainCtrl', function () {
     set: function () {}
   };
 
-  var mockTodos = {
-    query: function () { return [{id: 1, title: "First todo"}] },
-    save: function (params, callback) { return callback(params) },
-    delete: function (params, callback) { return callback(params) }
-  };
+  var mockQueryResponse = [{ id: 1, title: 'First todo'}];
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function ($controller, _$rootScope_, _$timeout_, _$httpBackend_, $resource) {
     scope = _$rootScope_.$new();
-    MainCtrl = $controller('MainCtrl', {
-      $scope: scope,
-      $rootScope: scope,
-      $timeout: _$timeout_,
-      Todos: mockTodos,
-      tokenHandler: mockTokenHandler
+    var Todos = $resource('http://localhost:3000/todos/:id', {}, {
+      patch: {method: 'PATCH', params: {id: "@id"}}
     });
+    $httpBackend = _$httpBackend_;
+    $httpBackend.expectGET('http://localhost:3000/todos')
+      .respond(200, mockQueryResponse);
+    scope.$apply(function () {
+      MainCtrl = $controller('MainCtrl', {
+        $scope: scope,
+        $rootScope: scope,
+        $timeout: _$timeout_,
+        Todos: Todos,
+        tokenHandler: mockTokenHandler
+      });
+    });
+    $httpBackend.flush();
   }));
 
   it('should initialize the todos with a query to the server', function () {
-    expect(scope.todos).toEqual(mockTodos.query());
+    expect(scope.todos[0].id).toEqual(mockQueryResponse[0].id);
+    expect(scope.todos[0].title).toEqual(mockQueryResponse[0].title);
   });
 
   it('should use created_at as the initial sorting predicate', function () {
@@ -45,13 +52,16 @@ describe('Controller: MainCtrl', function () {
     var newTodo;
     beforeEach(function () {
       newTodo = scope.newTodo = {id: 2, title: "New todo"};
-      scope.createTodo();
     });
     it("adds the new todo to the todos array", function () {
-      expect(scope.todos[1]).toEqual(newTodo);
+      scope.createTodo().then(function () {
+        expect(scope.todos[1]).toEqual(newTodo);
+      });
     });
     it("sets scope.newTodo.title to an empty string", function () {
-      expect(scope.newTodo.title).toEqual("");
+      scope.createTodo().then(function () {
+        expect(scope.newTodo.title).toEqual("");
+      });
     });
   });
 
@@ -78,8 +88,9 @@ describe('Controller: MainCtrl', function () {
   describe('$scope.deleteTodo', function () {
     it('deletes the todo', function () {
       scope.todos = [{title: "First todo"}, {title: "Second todo"}];
-      scope.deleteTodo(scope.todos[0]);
-      expect(scope.todos[0].title).toEqual("Second todo");
+      scope.deleteTodo(scope.todos[0]).then(function () {
+        expect(scope.todos[0].title).toEqual("Second todo");
+      });
     });
   });
 
