@@ -60,16 +60,21 @@ describe('Controller: MainCtrl', function () {
     var newTodo;
     beforeEach(function () {
       newTodo = scope.newTodo = {id: 2, title: "New todo"};
+      $httpBackend.expect('POST', todosPath())
+        .respond(200, newTodo);
     });
     it("adds the new todo to the todos array", function () {
-      scope.createTodo().then(function () {
-        expect(scope.todos[1]).toEqual(newTodo);
-      });
+      scope.createTodo();
+      expect(scope.submittingNew).toBeTruthy();
+      $httpBackend.flush();
+      expect(scope.todos[1].title).toEqual('New todo');
+      expect(scope.submittingNew).toBeFalsy();
     });
     it("sets scope.newTodo.title to an empty string", function () {
-      scope.createTodo().then(function () {
-        expect(scope.newTodo.title).toEqual("");
-      });
+      scope.createTodo();
+      expect(scope.newTodo.title).toEqual('New todo');
+      $httpBackend.flush();
+      expect(scope.newTodo.title).toEqual("");
     });
   });
 
@@ -99,8 +104,10 @@ describe('Controller: MainCtrl', function () {
       $httpBackend.expect('DELETE', todosPath(1))
         .respond(200);
       scope.deleteTodo(scope.todos[0]);
+      expect(scope.todos[0].submitting).toBeTruthy();
       $httpBackend.flush();
       expect(scope.todos[0].title).toEqual("Second todo");
+      expect(scope.todos[0].submitting).toBeFalsy();
     });
   });
 
