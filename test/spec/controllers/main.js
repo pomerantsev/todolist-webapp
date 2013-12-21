@@ -27,14 +27,12 @@ describe('Controller: MainCtrl', function () {
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET('http://localhost:3000/todos')
       .respond(200, mockQueryResponse);
-    scope.$apply(function () {
-      MainCtrl = $controller('MainCtrl', {
-        $scope: scope,
-        $rootScope: scope,
-        $timeout: _$timeout_,
-        Todos: Todos,
-        tokenHandler: mockTokenHandler
-      });
+    MainCtrl = $controller('MainCtrl', {
+      $scope: scope,
+      $rootScope: scope,
+      $timeout: _$timeout_,
+      Todos: Todos,
+      tokenHandler: mockTokenHandler
     });
     $httpBackend.flush();
   }));
