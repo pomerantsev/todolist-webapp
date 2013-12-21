@@ -5,6 +5,16 @@ describe('Controller: MainCtrl', function () {
   // load the controller's module
   beforeEach(module('myTodolistWebfrontApp'));
 
+  var backend = 'http://localhost:3000';
+  var resource = '/todos';
+  var todosPath = function (id) {
+    if (id) {
+      return backend + resource + '/' + id;
+    } else {
+      return backend + resource;
+    }
+  };
+
   var MainCtrl,
     scope,
     $httpBackend;
@@ -21,11 +31,11 @@ describe('Controller: MainCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, _$rootScope_, _$timeout_, _$httpBackend_, $resource) {
     scope = _$rootScope_.$new();
-    var Todos = $resource('http://localhost:3000/todos/:id', {}, {
+    var Todos = $resource(todosPath() + '/:id', {}, {
       patch: {method: 'PATCH', params: {id: "@id"}}
     });
     $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('http://localhost:3000/todos')
+    $httpBackend.expectGET(todosPath())
       .respond(200, mockQueryResponse);
     MainCtrl = $controller('MainCtrl', {
       $scope: scope,
@@ -85,10 +95,12 @@ describe('Controller: MainCtrl', function () {
 
   describe('$scope.deleteTodo', function () {
     it('deletes the todo', function () {
-      scope.todos = [{title: "First todo"}, {title: "Second todo"}];
-      scope.deleteTodo(scope.todos[0]).then(function () {
-        expect(scope.todos[0].title).toEqual("Second todo");
-      });
+      scope.todos = [{id: 1, title: "First todo"}, {id: 2, title: "Second todo"}];
+      $httpBackend.expect('DELETE', todosPath(1))
+        .respond(200);
+      scope.deleteTodo(scope.todos[0]);
+      $httpBackend.flush();
+      expect(scope.todos[0].title).toEqual("Second todo");
     });
   });
 
