@@ -56,6 +56,23 @@ describe('Controller: MainCtrl', function () {
     expect(scope.predicate).toEqual('created_at');
   });
 
+  it('nullifies $scope.errors when changes to newTodo are made', function () {
+    scope.errors = 'An error message';
+    scope.$apply(function () {
+      scope.newTodo = 'A new todo title';
+    });
+    expect(scope.errors).toBeNull();
+  });
+
+  it('nullifies $scope.errors when changes to editedTodo are made', function () {
+    scope.errors = 'An error message';
+    scope.$apply(function () {
+      scope.editedTodo = 'An edited todo title';
+    });
+    expect(scope.errors).toBeNull();
+  });
+
+
   describe('$scope.createTodo', function () {
     var newTodo,
       invalidTitle = Array(150).join('a'); // Long string
