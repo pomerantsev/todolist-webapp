@@ -86,11 +86,18 @@ app.controller('MainCtrl', function (
 
   $scope.deleteTodo = function (todo) {
     todo.submitting = true;
-    return Todos.delete({id: todo.id}, function () {
+    var remove = function (todo) {
       $scope.todos.splice($scope.todos.indexOf(todo), 1);
-    }, function () {
+    };
+    return Todos.delete({id: todo.id}, function () {
+      remove(todo);
+    }, function (response) {
       todo.submitting = false;
-      outputBackendError();
+      if (response.status === 404) {
+        remove(todo);
+      } else {
+        outputBackendError();
+      }
     }).$promise;
   };
 

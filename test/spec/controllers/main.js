@@ -147,17 +147,56 @@ describe('Controller: MainCtrl', function () {
     });
   });
 
-  describe('$scope.deleteTodo', function () {
-    it('deletes the todo', function () {
-      scope.todos = [{id: 1, title: "First todo"}, {id: 2, title: "Second todo"}];
-      $httpBackend.expect('DELETE', todosPath(1))
-        .respond(200);
-      scope.deleteTodo(scope.todos[0]);
-      expect(scope.todos[0].submitting).toBeTruthy();
-      $httpBackend.flush();
-      expect(scope.todos[0].title).toEqual("Second todo");
-      expect(scope.todos[0].submitting).toBeFalsy();
+  describe('$scope.cancelEditing', function () {
+    var todo;
+    beforeEach(function () {
+      todo = scope.todos[0];
+      todo.editing = true;
+    });
+    it('sets todo.editing to false', function () {
+      scope.cancelEditing(todo);
+      expect(todo.editing).toBeFalsy();
+    });
+    it('nullifies $scope.errors', function () {
+      scope.errors = 'An error message';
+      scope.cancelEditing(todo);
+      expect(scope.errors).toBeNull();
     });
   });
 
+  describe('$scope.deleteTodo', function () {
+    beforeEach(function () {
+      scope.todos = [{id: 1, title: "First todo"}, {id: 2, title: "Second todo"}];
+    });
+    describe('when deleting an existing todo', function () {
+      beforeEach(function () {
+        $httpBackend.expect('DELETE', todosPath(1)).respond(201);
+        scope.deleteTodo(scope.todos[0]);
+      });
+      it('deletes the todo', function () {
+        $httpBackend.flush();
+        expect(scope.todos[0].title).toEqual("Second todo");
+        expect(scope.todos[1]).toBeUndefined();
+      });
+      it('sets $scope.submitting to true prior to deleting', function () {
+        expect(scope.todos[0].submitting).toBeTruthy();
+        $httpBackend.flush();
+      });
+    });
+    describe("when the todo doesn't exist anymore", function () {
+      beforeEach(function () {
+        $httpBackend.expect('DELETE', todosPath(1)).respond(404);
+        scope.deleteTodo(scope.todos[0]);
+      });
+      it('deletes the todo anyway', function () {
+        $httpBackend.flush();
+        expect(scope.todos[0].title).toEqual("Second todo");
+        expect(scope.todos[1]).toBeUndefined();
+      });
+      it('sets $scope.submitting to true prior to deleting', function () {
+        expect(scope.todos[0].submitting).toBeTruthy();
+        $httpBackend.flush();
+      });
+    });
+  });
 });
