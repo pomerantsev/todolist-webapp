@@ -26,7 +26,7 @@ describe('Controller: MainCtrl', function () {
     set: function () {}
   };
 
-  var mockQueryResponse = [{ id: 1, title: 'First todo'}];
+  var initialTodos = [{ id: 1, title: 'First todo'}];
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, _$rootScope_, _$timeout_, _$httpBackend_, $resource) {
@@ -36,7 +36,7 @@ describe('Controller: MainCtrl', function () {
     });
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET(todosPath())
-      .respond(200, mockQueryResponse);
+      .respond(200, initialTodos);
     MainCtrl = $controller('MainCtrl', {
       $scope: scope,
       $rootScope: scope,
@@ -47,34 +47,61 @@ describe('Controller: MainCtrl', function () {
     $httpBackend.flush();
   }));
 
-  it('should initialize the todos with a query to the server', function () {
-    expect(scope.todos[0].id).toEqual(mockQueryResponse[0].id);
-    expect(scope.todos[0].title).toEqual(mockQueryResponse[0].title);
+  it('initializes the todos with a query to the server', function () {
+    expect(scope.todos[0].id).toEqual(initialTodos[0].id);
+    expect(scope.todos[0].title).toEqual(initialTodos[0].title);
   });
 
-  it('should use created_at as the initial sorting predicate', function () {
+  it('uses created_at as the initial sorting predicate', function () {
     expect(scope.predicate).toEqual('created_at');
   });
 
   describe('$scope.createTodo', function () {
-    var newTodo;
-    beforeEach(function () {
-      newTodo = scope.newTodo = {id: 2, title: "New todo"};
-      $httpBackend.expect('POST', todosPath())
-        .respond(200, newTodo);
+    var newTodo,
+      invalidTitle = Array(150).join('a'); // Long string
+    describe('with a valid todo', function () {
+      beforeEach(function () {
+        newTodo = scope.newTodo = {id: 2, title: "New todo"};
+        $httpBackend.expect('POST', todosPath())
+          .respond(200, newTodo);
+        scope.createTodo();
+      });
+      it("adds the new todo to the todos array", function () {
+        $httpBackend.flush();
+        expect(scope.todos[1].title).toBe('New todo');
+      });
+      it("sets 'submittingNew' back to false", function () {
+        expect(scope.submittingNew).toBeTruthy();
+        $httpBackend.flush();
+        expect(scope.submittingNew).toBeFalsy();
+      });
+      it("sets scope.newTodo.title to an empty string after the server response", function () {
+        expect(scope.newTodo.title).toBe('New todo');
+        $httpBackend.flush();
+        expect(scope.newTodo.title).toBe('');
+      });
     });
-    it("adds the new todo to the todos array", function () {
-      scope.createTodo();
-      expect(scope.submittingNew).toBeTruthy();
-      $httpBackend.flush();
-      expect(scope.todos[1].title).toEqual('New todo');
-      expect(scope.submittingNew).toBeFalsy();
-    });
-    it("sets scope.newTodo.title to an empty string", function () {
-      scope.createTodo();
-      expect(scope.newTodo.title).toEqual('New todo');
-      $httpBackend.flush();
-      expect(scope.newTodo.title).toEqual("");
+    describe('with an invalid todo', function () {
+      beforeEach(function () {
+        newTodo = scope.newTodo = {id: 2, title: invalidTitle};
+        $httpBackend.expect('POST', todosPath())
+          .respond(422, {title: ["is too long (maximum is 140 characters)"]});
+        scope.createTodo();
+      });
+      it("doesn't add the todo to the todos array", function () {
+        $httpBackend.flush();
+        expect(scope.todos[1]).toBeUndefined();
+      });
+      it("sets 'submittingNew' back to false", function () {
+        expect(scope.submittingNew).toBeTruthy();
+        $httpBackend.flush();
+        expect(scope.submittingNew).toBeFalsy();
+      });
+      it("leaves 'newTodo' intact", function () {
+        expect(scope.newTodo.title).toBe(invalidTitle);
+        $httpBackend.flush();
+        expect(scope.newTodo.title).toBe(invalidTitle);
+      });
     });
   });
 
