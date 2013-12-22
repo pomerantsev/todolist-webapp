@@ -122,6 +122,39 @@ describe('Controller: MainCtrl', function () {
     });
   });
 
+  describe('$scope.toggleCompleted', function () {
+    var todo;
+    beforeEach(function () {
+      todo = scope.todos[0];
+    });
+    describe('when the todo exists', function () {
+      beforeEach(function () {
+        $httpBackend.expectPATCH(todosPath(1))
+          .respond(201);
+        scope.toggleCompleted(todo);
+      });
+      it("toggles the todo's 'completed' attribute immediately", function () {
+        expect(todo.completed).toBe(true);
+        $httpBackend.flush();
+        expect(todo.completed).toBe(true);
+      });
+      it("sets todo.submitting to true and then back to false", function () {
+        expect(todo.submitting).toBe(true);
+        $httpBackend.flush();
+        expect(todo.submitting).toBe(false);
+      });
+    });
+    describe("when the todo doesn't exist", function () {
+      it("removes the todo from $scope.todos", function () {
+        $httpBackend.expectPATCH(todosPath(1))
+          .respond(404);
+        scope.toggleCompleted(todo);
+        $httpBackend.flush();
+        expect(scope.todos.length).toBe(0);
+      });
+    });
+  });
+
   describe('$scope.editTodo', function () {
     var firstTodo = {title: "First"},
       secondTodo = {title: "Second"};

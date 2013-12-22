@@ -5,6 +5,9 @@ app.controller('MainCtrl', function (
   var outputBackendError = function () {
     $scope.errors = backendErrorMessage;
   };
+  var remove = function (todo) {
+    $scope.todos.splice($scope.todos.indexOf(todo), 1);
+  };
 
   $scope.newTodo = {
     title: "",
@@ -44,14 +47,17 @@ app.controller('MainCtrl', function (
     $scope.errors = null;
   }, true);
 
-  $scope.toggleCompleted = function (todo) {
+  $scope.toggleCompleted = function (todo, $event) {
+    todo.completed = !todo.completed;
     todo.submitting = true;
-    todo.$patch()
-    .catch(function () {
-      todo.completed = !todo.completed;
-      outputBackendError();
-    })
-    .finally(function () {
+    todo.$patch().catch(function (response) {
+      if (response.status === 404) {
+        remove(todo);
+      } else {
+        todo.completed = !todo.completed;
+        outputBackendError();
+      }
+    }).finally(function () {
       todo.submitting = false;
     });
   };
@@ -86,9 +92,6 @@ app.controller('MainCtrl', function (
 
   $scope.deleteTodo = function (todo) {
     todo.submitting = true;
-    var remove = function (todo) {
-      $scope.todos.splice($scope.todos.indexOf(todo), 1);
-    };
     Todos.delete({id: todo.id}, function () {
       remove(todo);
     }, function (response) {

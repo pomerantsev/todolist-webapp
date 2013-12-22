@@ -40,7 +40,7 @@
           <form class="form-inline">
             <div class="checkbox" ng-show="!todo.editing">
               <label>
-                <input type="checkbox" ng-model="todo.completed" ng-click="toggleCompleted(todo)" ng-disabled="todo.submitting">
+                <input type="checkbox" ng-checked="todo.completed" ng-click="toggleCompleted(todo, $event)" ng-disabled="todo.submitting">
                 {{todo.title}}
               </label>
             </div>
