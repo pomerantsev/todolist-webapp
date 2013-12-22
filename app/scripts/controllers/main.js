@@ -27,7 +27,7 @@ app.controller('MainCtrl', function (
 
   $scope.createTodo = function () {
     $scope.submittingNew = true;
-    return Todos.save($scope.newTodo, function (todo) {
+    Todos.save($scope.newTodo, function (todo) {
       $scope.todos.push(todo);
       $scope.newTodo.title = "";
     }, function (response) {
@@ -89,7 +89,7 @@ app.controller('MainCtrl', function (
     var remove = function (todo) {
       $scope.todos.splice($scope.todos.indexOf(todo), 1);
     };
-    return Todos.delete({id: todo.id}, function () {
+    Todos.delete({id: todo.id}, function () {
       remove(todo);
     }, function (response) {
       todo.submitting = false;
@@ -98,7 +98,7 @@ app.controller('MainCtrl', function (
       } else {
         outputBackendError();
       }
-    }).$promise;
+    });
   };
 
   $scope.email = tokenHandler.get().email;
