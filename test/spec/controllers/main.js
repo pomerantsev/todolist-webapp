@@ -123,11 +123,10 @@ describe('Controller: MainCtrl', function () {
   });
 
   describe('$scope.editTodo', function () {
-    var firstTodo, secondTodo;
+    var firstTodo = {title: "First"},
+      secondTodo = {title: "Second"};
     beforeEach(function () {
-      scope.todos = [{title: "First"}, {title: "Second"}];
-      firstTodo = scope.todos[0];
-      secondTodo = scope.todos[1];
+      scope.todos = [firstTodo, secondTodo];
     });
     it("enables the editing mode for the selected todo", function () {
       scope.editTodo(secondTodo);
@@ -139,6 +138,12 @@ describe('Controller: MainCtrl', function () {
       scope.editTodo(secondTodo);
       expect(secondTodo.editing).toBeTruthy();
       expect(firstTodo.editing).toBeFalsy();
+      expect(scope.editedTodo.title).toEqual("Second");
+    });
+    it("nullifies $scope.errors", function () {
+      scope.errors = 'An error message';
+      scope.editTodo(secondTodo);
+      expect(scope.errors).toBeNull();
     });
   });
 
