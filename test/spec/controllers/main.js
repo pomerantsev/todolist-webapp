@@ -180,6 +180,71 @@ describe('Controller: MainCtrl', function () {
     });
   });
 
+  describe('$scope.updateTodo', function () {
+    var todo;
+    beforeEach(function () {
+      todo = scope.todos[0];
+      todo.title = 'Initial title';
+      todo.editing = true;
+      scope.editedTodo = angular.copy(todo);
+    });
+    describe('when the todo exists', function () {
+      describe('when the todo is valid', function () {
+        beforeEach(function () {
+          scope.editedTodo.title = 'New title';
+          $httpBackend.expectPATCH(todosPath(1))
+            .respond(201);
+          scope.updateTodo(todo);
+        });
+        it('saves the new attributes after resolving the request', function () {
+          expect(todo.title).toBe('Initial title');
+          $httpBackend.flush();
+          expect(todo.title).toBe('New title');
+        });
+        it("sets todo.submitting to true and then back to false", function () {
+          expect(todo.submitting).toBe(true);
+          $httpBackend.flush();
+          expect(todo.submitting).toBe(false);
+        });
+        it('sets todo.editing to false after resolving the request', function () {
+          expect(todo.editing).toBe(true);
+          $httpBackend.flush();
+          expect(todo.submitting).toBe(false);
+        });
+      });
+      describe('when the todo in invalid', function () {
+        beforeEach(function () {
+          scope.editedTodo.title = Array(150).join('a'); // Long string
+          $httpBackend.expectPATCH(todosPath(1))
+            .respond(422, {title: ["is too long (maximum is 140 characters)"]});
+          scope.updateTodo(todo);
+        });
+        it('does not save the new attributes', function () {
+          $httpBackend.flush();
+          expect(todo.title).toBe('Initial title');
+        });
+        it("sets todo.submitting to true and then back to false", function () {
+          expect(todo.submitting).toBe(true);
+          $httpBackend.flush();
+          expect(todo.submitting).toBe(false);
+        });
+        it('does not set todo.editing to false', function () {
+          $httpBackend.flush();
+          expect(todo.editing).toBe(true);
+        });
+      });
+    });
+    describe('when the todo does not exist', function () {
+      it("removes the todo from $scope.todos", function () {
+        $httpBackend.expectPATCH(todosPath(1))
+          .respond(404);
+        scope.updateTodo(todo);
+        $httpBackend.flush();
+        expect(scope.todos.length).toBe(0);
+      });
+    });
+  });
+
   describe('$scope.cancelEditing', function () {
     var todo;
     beforeEach(function () {

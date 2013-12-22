@@ -71,7 +71,7 @@ app.controller('MainCtrl', function (
     $scope.editedTodo = angular.copy(todo);
   };
 
-  $scope.saveEditing = function (todo) {
+  $scope.updateTodo = function (todo) {
     todo.submitting = true;
     $scope.editedTodo.$patch().then(function () {
       todo.title = $scope.editedTodo.title;
@@ -79,7 +79,11 @@ app.controller('MainCtrl', function (
       todo.priority = $scope.editedTodo.priority;
       todo.editing = false;
     }, function (response) {
-      ($scope.errors = response.data) || outputBackendError();
+      if (response.status === 404) {
+        remove(todo);
+      } else {
+        ($scope.errors = response.data) || outputBackendError();
+      }
     }).finally(function () {
       todo.submitting = false;
     });
