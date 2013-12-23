@@ -25,6 +25,7 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location, $cookies)
     get: function () {
       if (!$cookies.token) {
         $rootScope.$broadcast('event:unauthorized');
+        return null;
       } else {
         return {
           token: $cookies.token,

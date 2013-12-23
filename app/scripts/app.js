@@ -15,8 +15,12 @@ var app = angular.module('myTodolistWebfrontApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
         resolve: {
-          token: ['tokenHandler', function (tokenHandler) {
-            return tokenHandler.get();
+          token: ['tokenHandler', '$q', function (tokenHandler, $q) {
+            var defer = $q.defer();
+            if (tokenHandler.get()) {
+              defer.resolve();
+            }
+            return defer.promise;
           }]
         }
       })
