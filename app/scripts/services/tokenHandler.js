@@ -1,8 +1,6 @@
 'use strict';
 
 app.factory('tokenHandler', function($rootScope, $http, $q, $location, $cookies) {
-  var token = $cookies.token,
-      email = $cookies.email;
 
   // https://gist.github.com/nblumoe/3052052
   var tokenWrapper = function (resource, action) {
@@ -21,18 +19,22 @@ app.factory('tokenHandler', function($rootScope, $http, $q, $location, $cookies)
 
   var tokenHandler = {
     set: function (newToken, newEmail) {
-      token = $cookies.token = newToken;
-      email = $cookies.email = newEmail;
+      $cookies.token = newToken;
+      $cookies.email = newEmail;
     },
     get: function () {
-      if (!token) {
+      if (!$cookies.token) {
         $rootScope.$broadcast('event:unauthorized');
       } else {
         return {
-          token: token,
-          email: email
+          token: $cookies.token,
+          email: $cookies.email
         };
       }
+    },
+    delete: function () {
+      delete $cookies.token;
+      delete $cookies.email;
     },
     wrapActions: function (resource, actions) {
       var wrappedResource = resource;

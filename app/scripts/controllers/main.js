@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('MainCtrl', function (
-    $scope, Todos, $timeout, tokenHandler, $rootScope, backendErrorMessage) {
+    $scope, Todos, $timeout, tokenHandler, $location, backendErrorMessage) {
   var outputBackendError = function () {
     $scope.errors = backendErrorMessage;
   };
@@ -111,7 +111,7 @@ app.controller('MainCtrl', function (
   $scope.email = tokenHandler.get().email;
 
   $scope.logout = function () {
-    tokenHandler.set(null, null);
-    $rootScope.$broadcast('event:unauthorized');
+    tokenHandler.delete();
+    $location.path('/login');
   };
 });
