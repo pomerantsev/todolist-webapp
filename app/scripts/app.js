@@ -45,7 +45,7 @@ var app = angular.module('myTodolistWebfrontApp', [
     });
     $httpProvider.interceptors.push('interceptor');
   })
-  .run(function ($rootScope, $http, $location, tokenHandler) {
+  .run(function ($rootScope, $location) {
     $rootScope.$on('event:unauthorized', function () {
       $location.path('/login');
     })
