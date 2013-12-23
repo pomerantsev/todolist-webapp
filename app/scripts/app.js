@@ -37,9 +37,7 @@ var app = angular.module('myTodolistWebfrontApp', [
       return {
         responseError: function (rejection) {
           if (rejection.status == 401) {
-            var d = $q.defer();
             $rootScope.$broadcast('event:unauthorized');
-            return d.promise;
           }
           return $q.reject(rejection);
         }
