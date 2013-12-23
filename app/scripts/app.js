@@ -33,24 +33,19 @@ var app = angular.module('myTodolistWebfrontApp', [
       });
   })
   .config(function ($httpProvider, $provide) {
-    $provide.factory('interceptor', function ($rootScope, $location, $q) {
-      var success = function (resp) {
-        return resp;
-      };
-      var err = function (resp) {
-        if (resp.status == 401) {
-          var d = $q.defer();
-          $rootScope.$broadcast('event:unauthorized');
-          return d.promise;
+    $provide.factory('interceptor', function ($rootScope, $q) {
+      return {
+        responseError: function (rejection) {
+          if (rejection.status == 401) {
+            var d = $q.defer();
+            $rootScope.$broadcast('event:unauthorized');
+            return d.promise;
+          }
+          return $q.reject(rejection);
         }
-        return $q.reject(resp);
-      };
-
-      return function (promise) {
-        return promise.then(success, err);
       };
     });
-    $httpProvider.responseInterceptors.push('interceptor');
+    $httpProvider.interceptors.push('interceptor');
   })
   .run(function ($rootScope, $http, $location, tokenHandler) {
     $rootScope.$on('event:unauthorized', function () {
