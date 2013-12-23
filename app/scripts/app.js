@@ -26,14 +26,25 @@ var app = angular.module('myTodolistWebfrontApp', [
       })
       .when('/login', {
         templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        resolve: {
+          token: ['tokenHandler', '$q', '$location', function (tokenHandler, $q, $location) {
+            var defer = $q.defer();
+            if (tokenHandler.get()) {
+              $location.path('/');
+            } else {
+              defer.resolve();
+            }
+            return defer.promise;
+          }]
+        }
       })
       .otherwise({
         redirectTo: '/'
       });
   })
-  .config(function ($httpProvider, $provide) {
-    $provide.factory('interceptor', function ($rootScope, $q) {
+  .config(function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($rootScope, $q) {
       return {
         responseError: function (rejection) {
           if (rejection.status == 401) {
@@ -43,7 +54,6 @@ var app = angular.module('myTodolistWebfrontApp', [
         }
       };
     });
-    $httpProvider.interceptors.push('interceptor');
   })
   .run(function ($rootScope, $location) {
     $rootScope.$on('event:unauthorized', function () {
