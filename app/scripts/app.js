@@ -43,8 +43,8 @@ var app = angular.module('myTodolistWebfrontApp', [
         redirectTo: '/'
       });
   })
-  .config(function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($rootScope, $q) {
+  .config(function ($httpProvider, $provide) {
+    $provide.factory('interceptor', ['$rootScope', '$q', function ($rootScope, $q) {
       return {
         responseError: function (rejection) {
           if (rejection.status == 401) {
@@ -53,7 +53,8 @@ var app = angular.module('myTodolistWebfrontApp', [
           return $q.reject(rejection);
         }
       };
-    });
+    }]);
+    $httpProvider.interceptors.push('interceptor');
   })
   .run(function ($rootScope, $location) {
     $rootScope.$on('event:unauthorized', function () {
