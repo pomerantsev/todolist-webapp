@@ -12,6 +12,7 @@ module.exports = function (grunt) {
   require('time-grunt')(grunt);
 
   grunt.loadNpmTasks('grunt-ng-constant');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.initConfig({
     ngconstant: {
       options: {
@@ -33,6 +34,22 @@ module.exports = function (grunt) {
           ENV: 'production'
         }
       }]
+    },
+    jasmine: {
+      project: {
+        src: [
+          'app/bower_components/angular/angular.js',
+          'app/bower_components/angular-mocks/angular-mocks.js',
+          'app/bower_components/angular-route/angular-route.js',
+          'app/bower_components/angular-resource/angular-resource.js',
+          'app/bower_components/angular-cookies/angular-cookies.js',
+          'app/scripts/*.js',
+          'app/scripts/**/*.js'
+        ],
+        options: {
+          specs: 'test/spec/**/*.js'
+        }
+      }
     },
     yeoman: {
       // configurable paths
